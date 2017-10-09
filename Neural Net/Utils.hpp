@@ -14,7 +14,7 @@ typedef matrix <float> MATRIXf;
 // -> Check for every line and every column and takes
 //input like 001,100,010 to 1,3,2
 //#################################################################
-matrix<int> matrix_to_class (matrix<int> binaryM)				
+matrix<int> matrix_to_class (matrix<float> binaryM)				
 {																
 																
 	for (int line = 0; line < binaryM.size1; line++)			
@@ -34,7 +34,7 @@ matrix<int> matrix_to_class (matrix<int> binaryM)
 //-> Check for every line and every column and takes
 //input like 1,3,2 to 001,100,010 			
 //#################################################################
-matrix<int> class_to_matrix (matrix<int> outputM)				
+matrix<int> class_to_matrix (matrix<float> outputM)				
 {																
 	for (int line = 0; line < outputM.size1; line++)			
 	{															
@@ -58,7 +58,7 @@ using namespace std;
 // -> Check for every line and loads it in memory for later usage
 // -> Returns a pointer to loaded file
 //#################################################################
-ifstream* Load_File(string filePath)
+ifstream* Load_File(const string filePath)
 {
 	ifstream dataFile (filePath , ios::in);
 	if (dataFile.is_open())
@@ -72,7 +72,7 @@ ifstream* Load_File(string filePath)
 // -> Takes input path 
 // -> Writes DATA to filePath
 //#################################################################
-template<typename T> void writeFile(string filePath, T Data)
+template<typename T> void writeFile(const string filePath, T Data)
 {
 	ofstream dataWrite;
 	dataWrite.open(filePath);
@@ -111,7 +111,7 @@ void carre(MATRIXf &TempMat)
 // -> Takes input matrix 
 // -> Adds all components to a single float
 //#################################################################
-float sum_of_all_components(MATRIXf TempMat)
+float sum_of_all_components(const MATRIXf TempMat)
 {
 	float total = 0;
 	for (int i = 0; i < TempMat.size1; i++)
@@ -129,7 +129,7 @@ float sum_of_all_components(MATRIXf TempMat)
 // -> Takes 2 input matrix 
 // -> Concatenates them like : {1,3,2,5,6,1,3,6,4,2,6}
 //#################################################################
-MATRIXf HorizontalConcatenate(MATRIXf X, MATRIXf Y)
+MATRIXf HorizontalConcatenate(const MATRIXf X, const MATRIXf Y)
 {
 	MATRIXf result;
 	int colR = 0;
@@ -157,7 +157,7 @@ MATRIXf HorizontalConcatenate(MATRIXf X, MATRIXf Y)
 // -> Takes 2 input matrix 
 // -> Calculates all the differencies
 //#################################################################
-MATRIXf differentiate(MATRIXf X, MATRIXf Y)
+MATRIXf differentiate(const MATRIXf X, const MATRIXf Y)
 {
 	MATRIXf result;
 	for (int line = 0; line <X.size1; line++)
@@ -201,4 +201,15 @@ float gen_random_float(float max)
 	boost::uniform_real<float> u(min, max);
 	boost::variate_generator<boost::mt19937&, boost::uniform_real<float> > gen(rng, u);
 	return gen();
+}
+
+void initialiseMat(MATRIXf &MAT, const int size1, const int size2, const float value)
+{
+	for (int size1 = 0; size1 <MAT.size1; size1++)
+	{
+		for (int size2 = 0; size2 < MAT.size2; size2++)
+		{
+			MAT.insert_element(size1,size2,value);
+		}
+	}
 }

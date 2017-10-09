@@ -53,10 +53,22 @@ MATRIXf backpropagation(MATRIXf input, MATRIXf weight, int eta, MATRIXf bias)
 	return weight;
 }
 
-void train(data_set training_set, data_set validation_set, data_set test_set)
+void train(data_set training_set, data_set validation_set, data_set test_set, int trainingCounts)
 {
 	MATRIXf WeightMat = initialiseWeight(0.5);
+	MATRIXf bias_training, bias_validate, bias_test;
+	initialiseMat(bias_training,training_set.inputs.size1 * training_set.inputs.size2,1,1.0);
+	initialiseMat(bias_validate, validation_set.inputs.size1 * validation_set.inputs.size2, 1, 1.0);
+	initialiseMat(bias_test, test_set.inputs.size1 * test_set.inputs.size2, 1, 1.0);
+	std::vector<std::vector<std::vector<float>>> errorsVector; // 1 -> training 2-> validation 3 -> test
+	while (trainingCounts)
+	{
+		WeightMat = backpropagation(training_set.inputs,WeightMat,0.1,bias_training);
+		errorsVector.push_back(
+		{evaluateError(training_set.inputs, WeightMat, training_set.outputs, training_set.classes, training_set.bias), 
+		evaluateError(validation_set.inputs, WeightMat, validation_set.outputs, validation_set.classes, validation_set.bias),
+		evaluateError(test_set.inputs, WeightMat, test_set.outputs, test_set.classes, test_set.bias)
+		});
 
-
-
+	}
 }
