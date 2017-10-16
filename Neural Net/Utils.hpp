@@ -1,12 +1,18 @@
 #pragma once
+
 #include <vector>
 #include <boost/numeric/ublas/matrix.hpp>
 #include <boost/numeric/ublas/io.hpp>
 #include <cmath>
+#include <boost/numeric/ublas/lu.hpp>
 #include <boost/random.hpp>
-using namespace boost::numeric::ublas;
 
-typedef matrix <float> MATRIXf;
+#define D_SCL_SECURE_NO_WARNINGS 1
+
+using namespace boost::numeric::ublas;
+boost::numeric::ublas::matrix <float> mat;
+typedef matrix <float, row_major, unbounded_array<float>> MATRIXf;
+
 //#################################################################
 //Loads a class to an output matrix or reverse					 ##
 //#################################################################
@@ -14,36 +20,39 @@ typedef matrix <float> MATRIXf;
 // -> Check for every line and every column and takes
 //input like 001,100,010 to 1,3,2
 //#################################################################
-matrix<int> matrix_to_class (matrix<float> binaryM)				
-{																
-																
-	for (int line = 0; line < binaryM.size1; line++)			
+MATRIXf matrix_to_class (const MATRIXf inputM)
+{	
+	MATRIXf output;
+	for (std::size_t line = 0; line < inputM.size1(); line++)
 	{															
-		for (int column = 0; column < binaryM.size2; column++)  
+		for (std::size_t column = 0; column < inputM.size2(); column++)
 		{														
-			if (column)											
+			if (column == 1)											
 			{													
-			binaryM.insert_element(line,0,column);				
+				output.insert_element(line,0.0,column);
 			}													
 		}														
-	}															
-}																
-																
+	}
+	
+	return output; 
+}																															
 //#################################################################
 //CLASS TO OUTPUT FUNCTION	
 //-> Check for every line and every column and takes
 //input like 1,3,2 to 001,100,010 			
 //#################################################################
-matrix<int> class_to_matrix (matrix<float> outputM)				
-{																
-	for (int line = 0; line < outputM.size1; line++)			
+MATRIXf class_to_matrix (const MATRIXf inputM)
+{		
+	MATRIXf output;
+	for (std::size_t line = 0; line < inputM.size1(); line++)
 	{															
-		for (int column = 0; column < outputM.size2; column++)	
+		for (std::size_t column = 0; column < inputM.size2(); column++)
 		{														
-			outputM.insert_element(line, column, 1);			
+			output.insert_element(line, column, 1);
 		}														
-	}															
-}																
+	}	
+	return output;
+}								
 //#################################################################
 
 //#################################################################
@@ -97,9 +106,9 @@ template<typename T> void writeFile(const string filePath, T Data)
 //#################################################################
 void carre(MATRIXf &TempMat)
 {
-	for (int i = 0; i < TempMat.size1; i++)
+	for (unsigned i = 0; i < TempMat.size1(); i++)
 	{
-		for (int j = 0; j < TempMat.size2; j++)
+		for (unsigned j = 0; j < TempMat.size2(); j++)
 		{
 			TempMat(i, j) = std::pow(TempMat(i, j), 2.0);
 		}
@@ -114,9 +123,9 @@ void carre(MATRIXf &TempMat)
 float sum_of_all_components(const MATRIXf TempMat)
 {
 	float total = 0;
-	for (int i = 0; i < TempMat.size1; i++)
+	for (unsigned i = 0; i < TempMat.size1(); i++)
 	{
-		for (int j = 0; j < TempMat.size2; j++)
+		for (unsigned j = 0; j < TempMat.size2(); j++)
 		{
 			total += TempMat(i, j);
 		}
@@ -133,18 +142,18 @@ MATRIXf HorizontalConcatenate(const MATRIXf X, const MATRIXf Y)
 {
 	MATRIXf result;
 	int colR = 0;
-	for (int line = 0; line <X.size1; line++)
+	for (unsigned line = 0; line <X.size1(); line++)
 	{
-		for (int column = 0; column < X.size2; column++)
+		for (unsigned column = 0; column < X.size2(); column++)
 		{
 			colR++;
 			result.insert_element(0, colR, X(line, column));
 		}
 	}
 
-	for (int line = 0; line <Y.size1; line++)
+	for (unsigned line = 0; line <Y.size1(); line++)
 	{
-		for (int column = 0; column < Y.size2; column++)
+		for (unsigned column = 0; column < Y.size2(); column++)
 		{
 			colR++;
 			result.insert_element(0, colR, Y(line, column));
@@ -160,9 +169,9 @@ MATRIXf HorizontalConcatenate(const MATRIXf X, const MATRIXf Y)
 MATRIXf differentiate(const MATRIXf X, const MATRIXf Y)
 {
 	MATRIXf result;
-	for (int line = 0; line <X.size1; line++)
+	for (unsigned line = 0; line <X.size1(); line++)
 	{
-		for (int column = 0; column < X.size2; column++)
+		for (unsigned column = 0; column < X.size2(); column++)
 		{
 			if (X(line, column) == Y(line, column))
 			{
@@ -193,7 +202,10 @@ float DerivativehyperbolicTanActivation(const float X)
 	return tempX;
 }
 
-
+//#################################################################
+//RANDOM NUMBER  
+// -> Generate a random float from -max to max
+//#################################################################
 float gen_random_float(float max)
 {
 	float min = 0.0 - max;
@@ -203,13 +215,19 @@ float gen_random_float(float max)
 	return gen();
 }
 
+//#################################################################
+//INITIALISE A MATRIX  
+// -> Initialise a Matrix of size size1/size2 and filled with value
+//#################################################################
 void initialiseMat(MATRIXf &MAT, const int size1, const int size2, const float value)
 {
-	for (int size1 = 0; size1 <MAT.size1; size1++)
+	for (unsigned size1 = 0; size1 <MAT.size1(); size1++)
 	{
-		for (int size2 = 0; size2 < MAT.size2; size2++)
+		for (unsigned size2 = 0; size2 < MAT.size2(); size2++)
 		{
 			MAT.insert_element(size1,size2,value);
 		}
 	}
 }
+//#################################################################
+//#################################################################
