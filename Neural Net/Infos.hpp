@@ -24,6 +24,4 @@ data_set::data_set(MATRIXf in)
 {
 	inputs=in;
 	classes = matrix_to_class(in);
-	writeFile("Classes.dat",classes);
-	writeFile("Inputs.dat", inputs);
 }

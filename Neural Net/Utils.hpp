@@ -6,11 +6,11 @@
 #include <cmath>
 #include <boost/numeric/ublas/lu.hpp>
 #include <boost/random.hpp>
+#include <boost/lexical_cast.hpp>
 
 #define D_SCL_SECURE_NO_WARNINGS 1
-
+#define PLOT_DEBUG 1
 using namespace boost::numeric::ublas;
-boost::numeric::ublas::matrix <float> mat;
 typedef matrix <float, row_major, unbounded_array<float>> MATRIXf;
 
 //#################################################################
@@ -87,9 +87,24 @@ template<typename T> void writeFile(const string filePath, T Data)
 	dataWrite.open(filePath);
 	if (dataWrite.is_open())
 	{
-		dataWrite << Data;	
+		for (auto i : Data)
+		{
+			dataWrite << i;
+		}
 	}
 	dataWrite.close();
+}
+void WritePlotValues(std::vector<std::vector<std::vector<float>>> errorsVector)
+{
+	ofstream dataWrite;
+	for (int h = 0; h <=2 ; h++)
+	{
+		for (int j = 0; j <= 1; j++)
+		{
+			writeFile(to_string(h) + "SetE" + to_string(j) + ".dat", errorsVector[h][j]);
+		}
+	}
+
 }
 //#################################################################
 //#################################################################
@@ -97,7 +112,6 @@ template<typename T> void writeFile(const string filePath, T Data)
 //#################################################################
 //Multiple operation on Matrices            					 ##
 //#################################################################
-
 
 //#################################################################
 //POWER 2 MATRICES 
