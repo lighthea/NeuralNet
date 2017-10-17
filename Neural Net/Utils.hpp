@@ -10,6 +10,7 @@
 
 #define D_SCL_SECURE_NO_WARNINGS 1
 #define PLOT_DEBUG 1
+
 using namespace boost::numeric::ublas;
 typedef matrix <float, row_major, unbounded_array<float>> MATRIXf;
 

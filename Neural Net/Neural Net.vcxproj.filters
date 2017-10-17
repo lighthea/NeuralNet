@@ -45,4 +45,10 @@
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="iris_test" />
+    <None Include="iris_training" />
+    <None Include="iris_validation" />
+    <None Include="Plot.py" />
+  </ItemGroup>
 </Project>
