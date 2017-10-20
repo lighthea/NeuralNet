@@ -7,6 +7,7 @@
 #include <boost/numeric/ublas/lu.hpp>
 #include <boost/random.hpp>
 #include <boost/lexical_cast.hpp>
+#include <boost/scoped_ptr.hpp>
 
 #define D_SCL_SECURE_NO_WARNINGS 1
 #define PLOT_DEBUG 1
@@ -30,7 +31,7 @@ MATRIXf matrix_to_class (const MATRIXf inputM)
 		{														
 			if (column == 1)											
 			{													
-				output.insert_element(line,0.0,column);
+				output.insert_element(line,0.0f,column);
 			}													
 		}														
 	}
@@ -68,14 +69,14 @@ using namespace std;
 // -> Check for every line and loads it in memory for later usage
 // -> Returns a pointer to loaded file
 //#################################################################
-ifstream* Load_File(const string filePath)
+ifstream Load_File(const string filePath)
 {
-	ifstream dataFile (filePath , ios::in);
+	ifstream dataFile(filePath , ios::in);
 	if (dataFile.is_open())
 	{ 
-		return &dataFile;
+		return dataFile;
 	}
-	return NULL;
+	assert("Error Loading File");
 }
 //#################################################################
 //WRITE FILE 
@@ -125,7 +126,7 @@ void carre(MATRIXf &TempMat)
 	{
 		for (unsigned j = 0; j < TempMat.size2(); j++)
 		{
-			TempMat(i, j) = std::pow(TempMat(i, j), 2.0);
+			TempMat(i, j) = std::pow(TempMat(i, j), 2.0f);
 		}
 	}
 }
@@ -202,18 +203,18 @@ MATRIXf differentiate(const MATRIXf X, const MATRIXf Y)
 //#################################################################
 float hyperbolicTanActivation(const float X)
 {
-	float tempX = 0;
+	float tempX = 0.0f;
 	tempX = X;
-	tempX = std::tanh(tempX) + 1.0;
-	tempX = tempX / 2.0;
+	tempX = std::tanh(tempX) + 1.0f;
+	tempX = tempX / 2.0f;
 	return tempX;
 }
 float DerivativehyperbolicTanActivation(const float X)
 {
-	float tempX = 0;
+	float tempX = 0.0f;
 	tempX = X;
-	tempX = 1 - std::pow(std::tanh(tempX), 2.0);
-	tempX = tempX / 2.0;
+	tempX = 1 - std::pow(std::tanh(tempX), 2.0f);
+	tempX = tempX / 2.0f;
 	return tempX;
 }
 
@@ -223,7 +224,7 @@ float DerivativehyperbolicTanActivation(const float X)
 //#################################################################
 float gen_random_float(float max)
 {
-	float min = 0.0 - max;
+	float min = 0.0f - max;
 	boost::mt19937 rng;
 	boost::uniform_real<float> u(min, max);
 	boost::variate_generator<boost::mt19937&, boost::uniform_real<float> > gen(rng, u);

@@ -67,14 +67,14 @@ void train(data_set training_set, data_set validation_set, data_set test_set, in
 	#ifdef PLOT_DEBUG
 	while (trainingCounts)
 	{
-		WeightMat = backpropagation(training_set.inputs,WeightMat,0.1,bias_training);
+		WeightMat = backpropagation(training_set.inputs,WeightMat,.1f,bias_training);
 		errorsVector.push_back(
 		{
 		evaluateError(training_set.inputs, WeightMat, training_set.outputs, training_set.classes, training_set.bias), 
 		evaluateError(validation_set.inputs, WeightMat, validation_set.outputs, validation_set.classes, validation_set.bias),
 		evaluateError(test_set.inputs, WeightMat, test_set.outputs, test_set.classes, test_set.bias)
 		});
-
+		std::system("python Plot.py");
 	}
 	#endif
 }
