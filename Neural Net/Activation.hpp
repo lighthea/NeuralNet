@@ -10,7 +10,7 @@ MATRIXf Activation_Function(const MATRIXf X, float (*funcPtr)(float))
 	{
 		for (unsigned int column = 0; column < X.size2(); column++)
 		{
-			Y.insert_element(line,column,funcPtr(X(line,column)));
+			assign(Y,line,column,funcPtr(X(line,column)));
 		}
 	}
 	return Y;
@@ -31,7 +31,7 @@ MATRIXf initialiseWeight(float maxW)
 	{
 		for (unsigned int column = 0; column < weight.size2(); column++)
 		{
-			weight.insert_element(line, column, gen_random_float(maxW));
+			assign(weight,line, column, gen_random_float(maxW));
 		}
 	}
 	return weight;
@@ -74,7 +74,8 @@ void train(data_set training_set, data_set validation_set, data_set test_set, in
 		evaluateError(validation_set.inputs, WeightMat, validation_set.outputs, validation_set.classes, validation_set.bias),
 		evaluateError(test_set.inputs, WeightMat, test_set.outputs, test_set.classes, test_set.bias)
 		});
-		std::system("python Plot.py");
+		
+		WritePlotValues(errorsVector);
 	}
 	#endif
 }

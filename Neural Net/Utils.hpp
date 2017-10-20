@@ -15,6 +15,13 @@
 using namespace boost::numeric::ublas;
 typedef matrix <float, row_major, unbounded_array<float>> MATRIXf;
 
+template<typename T, typename U>
+
+void assign(matrix<T>& m, std::size_t r, std::size_t c, U const& data)
+{
+	m.resize(std::max(m.size1(), r + 1), std::max(m.size2(), c + 1));
+	m(r, c) = data;
+}
 //#################################################################
 //Loads a class to an output matrix or reverse					 ##
 //#################################################################
@@ -31,7 +38,7 @@ MATRIXf matrix_to_class (const MATRIXf inputM)
 		{														
 			if (column == 1)											
 			{													
-				output.insert_element(line,0.0f,column);
+				assign(output,line,0.0f,column);
 			}													
 		}														
 	}
@@ -50,7 +57,7 @@ MATRIXf class_to_matrix (const MATRIXf inputM)
 	{															
 		for (std::size_t column = 0; column < inputM.size2(); column++)
 		{														
-			output.insert_element(line, column, 1);
+			assign(output,line, column, 1);
 		}														
 	}	
 	return output;
@@ -163,7 +170,7 @@ MATRIXf HorizontalConcatenate(const MATRIXf X, const MATRIXf Y)
 		for (unsigned column = 0; column < X.size2(); column++)
 		{
 			colR++;
-			result.insert_element(0, colR, X(line, column));
+			assign(result,0, colR, X(line, column));
 		}
 	}
 
@@ -172,7 +179,7 @@ MATRIXf HorizontalConcatenate(const MATRIXf X, const MATRIXf Y)
 		for (unsigned column = 0; column < Y.size2(); column++)
 		{
 			colR++;
-			result.insert_element(0, colR, Y(line, column));
+			assign(result,0, colR, Y(line, column));
 		}
 	}
 	return result;
@@ -191,7 +198,7 @@ MATRIXf differentiate(const MATRIXf X, const MATRIXf Y)
 		{
 			if (X(line, column) == Y(line, column))
 			{
-				result.insert_element(line, column, 1.0);
+				assign(result,line, column, 1.0);
 			}
 		}
 	}
@@ -241,7 +248,7 @@ void initialiseMat(MATRIXf &MAT, const int size1, const int size2, const float v
 	{
 		for (unsigned size2 = 0; size2 < MAT.size2(); size2++)
 		{
-			MAT.insert_element(size1,size2,value);
+			assign(MAT,size1,size2,value);
 		}
 	}
 }
